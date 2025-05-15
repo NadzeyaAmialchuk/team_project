@@ -1,0 +1,13 @@
+# compiled output
+/dist
+node_modules
+/build
+/generated
+
+# dotenv environment variable files
+.env
+.turbo
+
+apps/core-server-app/.gitignore
+apps/client-app/.gitignore
+apps/auth-service/.gitignore
