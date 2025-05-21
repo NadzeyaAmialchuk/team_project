@@ -14,8 +14,15 @@ function loadEnvironment() {
 
 loadEnvironment();
 
+const environment = process.env.NODE_ENV ?? "dev";
+
+const isDevelopment = environment === "dev";
+const isProduction = environment === "prod";
+
 const config: Config = {
   port: Number(process.env.PORT) || 3000,
+  isDev: isDevelopment,
+  isProd: isProduction,
 };
 
 export default config;
