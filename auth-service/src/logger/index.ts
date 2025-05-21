@@ -11,8 +11,8 @@ const { combine, timestamp, printf, colorize, errors } = winston.format;
 
 const logFormat = printf(({ level, message, timestamp, stack }) => {
   return stack
-    ? `${timestamp} [${level}]: ${message}\n${stack}`
-    : `${timestamp} [${level}]: ${message}`;
+    ? `\n${timestamp} [${level}]: ${message}\n${stack}`
+    : `\n${timestamp} [${level}]: ${message}`;
 });
 
 export const logger = winston.createLogger({
