@@ -9,7 +9,16 @@ function loadEnvironment() {
   const environmentPath = path.resolve(process.cwd(), environmentFile);
 
   logger.info(`Loading env file: ${environmentFile}`);
-  dotenv.config({ path: environmentPath });
+
+  const result = dotenv.config({ path: environmentPath });
+
+  if (result.error) {
+    logger.error(
+      `Failed to load env file at path: ${environmentPath}. Error: ${result.error.message}`
+    );
+  } else {
+    logger.info(`Env file loaded successfully.`);
+  }
 }
 
 loadEnvironment();
