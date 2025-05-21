@@ -2,19 +2,19 @@ import { Request, Response, NextFunction } from "express";
 import { responseLogger } from "../../config/logger";
 
 export function responseLoggerMiddleware(
-  req: Request,
-  res: Response,
+  request: Request,
+  response: Response,
   next: NextFunction
 ) {
-  const oldSend = res.send.bind(res);
-  let responseBody: any;
+  const oldSend = response.send.bind(response);
+  let responseBody: null;
 
-  res.send = (body) => {
+  response.send = (body) => {
     responseBody = body;
     return oldSend(body);
   };
 
-  res.on("finish", () => {
+  response.on("finish", () => {
     responseLogger.info(
       `Response body: ${
         typeof responseBody === "object"

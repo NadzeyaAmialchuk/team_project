@@ -1,10 +1,10 @@
 import winston from "winston";
-import path from "path";
-import fs from "fs";
+import path from "node:path";
+import fs from "node:fs";
 
-const logDir = path.resolve(__dirname, "../../../logs");
-if (!fs.existsSync(logDir)) {
-  fs.mkdirSync(logDir);
+const logDirectory = path.resolve(process.cwd(), "logs");
+if (!fs.existsSync(logDirectory)) {
+  fs.mkdirSync(logDirectory);
 }
 
 const { combine, timestamp, printf, colorize, errors } = winston.format;
@@ -28,7 +28,7 @@ export const logger = winston.createLogger({
       ),
     }),
     new winston.transports.File({
-      filename: path.join(logDir, "error.log"),
+      filename: path.join(logDirectory, "error.log"),
       level: "error",
       handleExceptions: true,
     }),
@@ -44,7 +44,7 @@ export const requestLogger = winston.createLogger({
       format: combine(colorize(), timestamp(), logFormat),
     }),
     new winston.transports.File({
-      filename: path.join(logDir, "request.log"),
+      filename: path.join(logDirectory, "request.log"),
     }),
   ],
 });
@@ -57,7 +57,7 @@ export const responseLogger = winston.createLogger({
       format: combine(colorize(), timestamp(), logFormat),
     }),
     new winston.transports.File({
-      filename: path.join(logDir, "response.log"),
+      filename: path.join(logDirectory, "response.log"),
     }),
   ],
 });

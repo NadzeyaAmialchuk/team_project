@@ -6,10 +6,10 @@ export const requestLoggerMiddleware = expressWinston.logger({
   meta: true,
   msg: "{{req.method}} {{req.url}} {{res.statusCode}} {{res.responseTime}}ms",
   colorize: false,
-  dynamicMeta: (req, res) => ({
-    headers: req.headers,
-    query: req.query,
-    params: req.params,
-    body: req.body,
+  dynamicMeta: (request) => ({
+    headers: request.headers,
+    query: request.query,
+    params: request.params,
+    body: request.body,
   }),
 });
