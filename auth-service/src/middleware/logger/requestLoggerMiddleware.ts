@@ -1,5 +1,5 @@
 import expressWinston from "express-winston";
-import { requestLogger } from "../../config/logger";
+import { requestLogger } from "../../logger";
 
 export const requestLoggerMiddleware = expressWinston.logger({
   winstonInstance: requestLogger,

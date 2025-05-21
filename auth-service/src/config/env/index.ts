@@ -1,7 +1,7 @@
 import dotenv from "dotenv";
 import path from "node:path";
-import { logger } from "../logger";
-import { Config } from "./index.model";
+import { logger } from "../../logger";
+import { Config } from "./model";
 
 function loadEnvironment() {
   const environment = process.env.NODE_ENV || "dev";

@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from "express";
-import { responseLogger } from "../../config/logger";
+import { responseLogger } from "../../logger";
 
 export function responseLoggerMiddleware(
   request: Request,

@@ -4,6 +4,7 @@ import { responseLoggerMiddleware } from "./middleware/logger/responseLoggerMidd
 import { errorLoggerMiddleware } from "./middleware/logger/errorLoggerMiddleware";
 import { errorHandlerMiddleware } from "./middleware/error";
 import config from "./config/env";
+import { logger } from "./logger";
 import helmet from "helmet";
 
 export const app = express();
@@ -17,5 +18,5 @@ app.use(errorLoggerMiddleware);
 app.use(errorHandlerMiddleware);
 
 app.listen(() => {
-  console.log(`Server listening at http://localhost:${config.port}`);
+  logger.info(`Server listening at http://localhost:${config.port}`);
 });
