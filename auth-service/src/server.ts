@@ -1,12 +1,19 @@
 import express from "express";
+import { requestLoggerMiddleware } from "./middleware/logger/requestLoggerMiddleware";
+import { responseLoggerMiddleware } from "./middleware/logger/responseLoggerMiddleware";
+import { errorLoggerMiddleware } from "./middleware/logger/errorLoggerMiddleware";
+import { errorHandlerMiddleware } from "./middleware/error";
 
-const app = express();
+export const app = express();
+
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+app.use(requestLoggerMiddleware);
+app.use(responseLoggerMiddleware);
+app.use(errorLoggerMiddleware);
+app.use(errorHandlerMiddleware);
+
 const port = 3000;
-
-app.get("/", (req, res) => {
-  res.send("Hello from ts-node + nodemon dev server!");
-});
-
 app.listen(port, () => {
-  console.log(`Server running on http://localhost:${port}`);
+  console.log(`Server listening at http://localhost:${port}`);
 });
