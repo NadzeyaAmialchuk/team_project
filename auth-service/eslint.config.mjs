@@ -28,6 +28,7 @@ export default defineConfig([
       "unicorn/filename-case": "off",
       "n/no-missing-import": "off",
       "n/no-unpublished-import": "off",
+      "n/no-extraneous-import": "off",
     },
   },
 ]);
