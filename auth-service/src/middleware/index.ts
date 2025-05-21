@@ -2,7 +2,7 @@ import { requestLoggerMiddleware } from "../middleware/logger/requestLoggerMiddl
 import { responseLoggerMiddleware } from "../middleware/logger/responseLoggerMiddleware";
 import { errorLoggerMiddleware } from "../middleware/logger/errorLoggerMiddleware";
 import { errorHandlerMiddleware } from "../middleware/error";
-import { app } from "server";
+import { app } from "app";
 
 app.use(requestLoggerMiddleware);
 app.use(responseLoggerMiddleware);

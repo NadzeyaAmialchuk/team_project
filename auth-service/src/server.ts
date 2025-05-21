@@ -1,13 +1,7 @@
-import express from "express";
+import { app } from "./app";
 import config from "./config/env";
 import { logger } from "./logger";
-import helmet from "helmet";
 
-export const app = express();
-
-app.use(helmet());
-app.use(express.json());
-
-app.listen(() => {
+app.listen(config.port, () => {
   logger.info(`Server listening at http://localhost:${config.port}`);
 });
