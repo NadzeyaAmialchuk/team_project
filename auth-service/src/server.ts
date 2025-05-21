@@ -3,6 +3,7 @@ import { requestLoggerMiddleware } from "./middleware/logger/requestLoggerMiddle
 import { responseLoggerMiddleware } from "./middleware/logger/responseLoggerMiddleware";
 import { errorLoggerMiddleware } from "./middleware/logger/errorLoggerMiddleware";
 import { errorHandlerMiddleware } from "./middleware/error";
+import config from "./config/env";
 
 export const app = express();
 
@@ -13,7 +14,6 @@ app.use(responseLoggerMiddleware);
 app.use(errorLoggerMiddleware);
 app.use(errorHandlerMiddleware);
 
-const port = 3000;
-app.listen(port, () => {
-  console.log(`Server listening at http://localhost:${port}`);
+app.listen(() => {
+  console.log(`Server listening at http://localhost:${config.port}`);
 });
