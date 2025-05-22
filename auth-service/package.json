@@ -6,7 +6,8 @@
     "dev": "cross-env NODE_ENV=dev nodemon",
     "build": "tsc",
     "start": "cross-env NODE_ENV=prod node dist/server.js",
-    "test": "jest"
+    "test": "jest",
+    "debug": "npm run build && cross-env NODE_ENV=dev node --inspect dist/server.js"
   },
   "engines": {
     "node": ">=22"
