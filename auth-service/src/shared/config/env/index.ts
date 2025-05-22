@@ -1,6 +1,6 @@
 import dotenv from "dotenv";
 import path from "node:path";
-import { logger } from "../../logger";
+import { logger } from "../../../logger";
 import { Config } from "./model";
 
 function loadEnvironment() {
@@ -25,13 +25,11 @@ loadEnvironment();
 
 const environment = process.env.NODE_ENV ?? "dev";
 
-const isDevelopment = environment === "dev";
-const isProduction = environment === "prod";
+export const isDevelopment = environment === "dev";
+export const isProduction = environment === "prod";
 
 const config: Config = {
   port: Number(process.env.PORT) || 3000,
-  isDev: isDevelopment,
-  isProd: isProduction,
 } as const;
 
 export default config;
