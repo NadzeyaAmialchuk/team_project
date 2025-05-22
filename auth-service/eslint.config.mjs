@@ -26,6 +26,7 @@ export default defineConfig([
   {
     rules: {
       "unicorn/filename-case": "off",
+      "unicorn/no-null": "off",
       "n/no-missing-import": "off",
       "n/no-unpublished-import": "off",
       "n/no-extraneous-import": "off",
