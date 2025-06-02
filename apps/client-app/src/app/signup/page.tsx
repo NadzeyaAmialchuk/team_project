@@ -4,10 +4,10 @@ import SignupForm from "../components/signupForm";
 
 export default function Signup() {
   return (
-    <div className="min-h-screen bg-gray-50 flex flex-col items-center justify-center p-4">
+    <div className="min-h-screen bg-gray-50 flex flex-col items-center justify-center p-4 w-90">
       <div className="max-w-md w-full bg-white p-8 border border-gray-200 rounded-sm">
-        <div className="flex justify-center mb-6">
-          <div className="relative w-44 h-14">
+        <div className="flex justify-center mb-2">
+          <div className="relative w-50 h-14">
             <Image
               src="/instagram_logo.svg"
               alt="Instagram logo"
@@ -17,7 +17,7 @@ export default function Signup() {
             />
           </div>
         </div>
-        <div className="text-center mb-4">
+        <div className="text-center mb-2 text-gray-500 text-sm">
           Sign up to see photos and videos from your friends.
         </div>
         <a
@@ -31,7 +31,7 @@ export default function Signup() {
         </a>
         <SignupForm />
       </div>
-      <div className="max-w-md w-full bg-white p-8 border border-gray-200 rounded-sm flex flex-col items-center">
+      <div className="max-w-md w-full bg-white p-8 border border-gray-200 rounded-sm flex flex-col items-center mt-4">
       <p className="text-sm text-gray-600">
                 Have an account?
               </p>

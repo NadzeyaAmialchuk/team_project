@@ -3,8 +3,8 @@ import SignInForm from "./signInForm";
 
 export default function SigninElement ({ hasBorder }: { hasBorder: boolean }) {
   return (
-    <div className="bg-white p-8 rounded-sm w-80">
-      <div className={hasBorder ? 'border border-gray-300 rounded-sm' : ''}>
+    <div className="bg-white p-8 rounded-sm w-95">
+      <div className={`${hasBorder ? 'border border-gray-300 rounded-sm' : ''} p-6`}>
               <div className="flex justify-center mb-6">
                 <div className="relative w-44 h-14">
                   <Image
