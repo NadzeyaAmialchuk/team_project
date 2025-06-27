@@ -23,15 +23,15 @@ router.post(
     [body("email").isEmail(), body("password").notEmpty(), validateRequest],
     authService.login
   );
-  
+
   router.get("/userMe", authMiddleware, async (req: any, res: any) => {
     try {
       const user = await authService.getUserMe(req.user.id);
-  
+
       if (!user) {
         return res.status(404).json({ error: "User not found" });
       }
-  
+
       const { password, password_salt, ...userData } = user;
       res.json(userData);
     } catch (error) {
@@ -40,5 +40,8 @@ router.post(
     }
   });
 
+  router.post("/logout", authService.logout);
+
+  router.post("/refresh", authService.refresh);
 
 module.exports = router;

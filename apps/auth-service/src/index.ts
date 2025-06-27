@@ -34,11 +34,13 @@ const prisma = require('./config/prisma.config');
 const { redisClient, connectRedis } = require('./config/redis.config');
 const authController = require('./controllers/auth.controller');
 const { errorHandler } = require('./middlewares/error.middleware');
+const cookieParser = require('cookie-parser');
 
 dotenv.config();
 
 const app = express();
 app.use(express.json());
+app.use(cookieParser())
 
 const PORT = process.env.PORT || 3001;
 
@@ -50,7 +52,7 @@ async function startServer() {
   try {
     await prisma.$connect();
     await connectRedis();
-    
+
     app.listen(PORT, () => {
       console.log(`Server running on http://localhost:${PORT}`);
     });
