@@ -1,10 +1,11 @@
 import { Module } from '@nestjs/common';
-import { PrismaModule } from 'src/prisma/prisma.module';
+
 import { HttpModule } from '@nestjs/axios';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { UserController } from './user.controller';
 import { UserService } from './user.service';
-import { AuthGuard } from 'src/guards/auth.guard';
+import { AuthGuard } from '../guards/auth.guard';
+import { PrismaModule } from '../prisma/prisma.module';
 
 @Module({
   imports: [

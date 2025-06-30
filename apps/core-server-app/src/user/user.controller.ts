@@ -9,7 +9,7 @@ import {
 } from '@nestjs/common';
 import { UserService } from './user.service';
 import { AuthGuard } from 'src/guards/auth.guard';
-import { IAuthRequest } from 'interfaces/IAuthRequest.interface';
+import { IAuthRequest } from 'src/interfaces/IAuthRequest.interface';
 
 @Controller('user')
 export class UserController {
@@ -17,7 +17,8 @@ export class UserController {
 
   @UseGuards(AuthGuard)
   @Get('me')
-  async findMe(@Req() request: IAuthRequest) {
+  findMe(@Req() request: IAuthRequest) {
+    console.log(request.user);
     if (request.user) {
       return {
         userId: request.user.id,

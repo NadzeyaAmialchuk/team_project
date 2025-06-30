@@ -7,7 +7,7 @@ import {
 import { HttpService } from '@nestjs/axios';
 import { firstValueFrom } from 'rxjs';
 import { Request } from 'express';
-import { IAuthRequest } from 'interfaces/IAuthRequest.interface';
+import { IAuthRequest } from 'src/interfaces/IAuthRequest.interface';
 
 @Injectable()
 export class AuthGuard implements CanActivate {
@@ -31,12 +31,9 @@ export class AuthGuard implements CanActivate {
           },
         ),
       );
+      console.log(response);
 
-      if (!response.data.valid) {
-        throw new UnauthorizedException('Invalid token');
-      }
-
-      request.user = { id: response.data.userId };
+      request.user = { id: response.data.id, email: response.data.email };
       return true;
     } catch (error) {
       console.log(error);
