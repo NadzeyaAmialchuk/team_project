@@ -3,12 +3,14 @@ const {
   generateAccessToken,
   generateRefreshToken,
   verifyRefreshToken,
+  saveRefreshTokenToRedis,
 } = require("../utils/jwt");
 const { redisClient } = require("../config/redis.config");
 const prisma = require("../config/prisma.config");
+const { setAuthCookies } = require("../utils/authCookies");
 
 
-const register = async (req: any, res: any) => {
+const register = async (req: any, res: any, next: any) => {
   try {
     const { username, email, password, phone } = req.body;
     const salt = bcrypt.genSaltSync(10);
@@ -27,58 +29,59 @@ const register = async (req: any, res: any) => {
     const accessToken = generateAccessToken(user.id, user.email);
     const refreshToken = generateRefreshToken(user.id);
 
-    await redisClient.set(`refreshToken:${user.id}`, refreshToken, {
-      EX: 7 * 24 * 60 * 60,
-    });
-    res.cookie("access_token", accessToken);
-    res.cookie("refresh_token", refreshToken);
+    await saveRefreshTokenToRedis(redisClient, user.id, refreshToken);
+    setAuthCookies(res, accessToken, refreshToken);
 
     res.send("Register successfully");
   } catch (error) {
     console.error("Registration error:", error);
-    res.status(500).json({ error: "Registration failed" });
+    next(error);
   }
 };
 
-const login = async (req: any, res: any) => {
+const login = async (req: any, res: any, next: any) => {
   try {
     const { email, password } = req.body;
     const user = await prisma.user.findUnique({ where: { email } });
 
     if (!user || !user.password || !user.password_salt) {
-      return res.status(401).json({ error: "Invalid credentials" });
+      const error: any = new Error("Invalid credentials");
+      error.statusCode = 401;
+      return next(error);
     }
 
     const isValid = bcrypt.compareSync(
       password + user.password_salt,
       user.password,
     );
-    if (!isValid) return res.status(401).json({ error: "Invalid credentials" });
+    if (!isValid) {
+      const error: any = new Error("Invalid credentials");
+      error.statusCode = 401;
+      return next(error);
+    }
 
     const accessToken = generateAccessToken(user.id, user.email);
     const refreshToken = generateRefreshToken(user.id);
 
-    await redisClient.set(`refreshToken:${user.id}`, refreshToken, {
-      EX: 7 * 24 * 60 * 60,
-    });
-
-    res.cookie("access_token", accessToken);
-    res.cookie("refresh_token", refreshToken);
+    await saveRefreshTokenToRedis(redisClient, user.id, refreshToken);
+    setAuthCookies(res, accessToken, refreshToken);
 
     res.send("login successfully");
 
   } catch (error) {
     console.error("Login error:", error);
-    res.status(500).json({ error: "Login failed" });
+    next(error);
   }
 };
 
-const refresh = async (req: any, res: any) => {
+const refresh = async (req: any, res: any, next: any) => {
   try {
     const refresh_token = req.cookies['refresh_token']
 
     if (!refresh_token) {
-      return res.status(401).json({ error: "Refresh token is required" });
+      const error: any = new Error("Refresh token is required");
+      error.statusCode = 401;
+      return next(error);
     }
 
     const decoded = verifyRefreshToken(refresh_token);
@@ -87,7 +90,9 @@ const refresh = async (req: any, res: any) => {
     const storedRefreshToken = await redisClient.get(`refreshToken:${userId}`);
 
     if (storedRefreshToken !== refresh_token) {
-      return res.status(401).json({ error: "Invalid refresh token" });
+      const error: any = new Error("Invalid refresh token");
+      error.statusCode = 401;
+      return next(error);
     }
 
     const user = await prisma.user.findUnique({
@@ -96,27 +101,25 @@ const refresh = async (req: any, res: any) => {
     });
 
     if (!user) {
-      return res.status(404).json({ error: "User not found" });
+      const error: any = new Error("User not found");
+      error.statusCode = 404;
+      return next(error);
     }
 
     const newAccessToken = generateAccessToken(user.id, user.email);
     const newRefreshToken = generateRefreshToken(user.id);
 
-    await redisClient.set(`refreshToken:${user.id}`, newRefreshToken, {
-      EX: 7 * 24 * 60 * 60,
-    });
-
-    res.cookie("access_token", newAccessToken);
-    res.cookie("refresh_token", newRefreshToken);
+    await saveRefreshTokenToRedis(redisClient, user.id, newRefreshToken);
+    setAuthCookies(res, newAccessToken, newRefreshToken);
     res.json('new tokens are generated')
 
   } catch (error) {
     console.error("Refresh token error:", error);
-    res.status(401).json({ error: "Invalid or expired refresh token" });
+    next(error);
   }
 };
 
-const logout = async (req: any, res: any) => {
+const logout = async (req: any, res: any, next: any) => {
   try {
     const userId = req.body.id;
     res.clearCookie("access_token");
@@ -125,7 +128,7 @@ const logout = async (req: any, res: any) => {
     res.json({ message: "Successfully logged out" });
   } catch (error) {
     console.error("Logout error:", error);
-    res.status(500).json({ error: "Logout failed" });
+    next(error);
   }
 };
 

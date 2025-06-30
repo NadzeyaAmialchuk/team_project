@@ -20,11 +20,18 @@ const verifyRefreshToken = (token: string): any => {
   return jwt.verify(token, process.env.JWT_REFRESH_SECRET!);
 };
 
+const saveRefreshTokenToRedis = async (redisClient: any, userId: string, refreshToken: string) => {
+  await redisClient.set(`refreshToken:${userId}`, refreshToken, {
+    EX: 7 * 24 * 60 * 60, // 7 days
+  });
+};
+
 module.exports= {
   generateAccessToken,
   generateRefreshToken,
   verifyAccessToken,
-  verifyRefreshToken
+  verifyRefreshToken,
+  saveRefreshTokenToRedis
 };
 
 export {};

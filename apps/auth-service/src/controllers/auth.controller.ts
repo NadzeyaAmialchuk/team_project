@@ -1,4 +1,5 @@
 const { Router } = require("express");
+import type { Request, Response, NextFunction } from "express";
 const { body } = require("express-validator");
 const authService = require("../services/auth.service");
 const validateRequest =
@@ -16,19 +17,18 @@ router.post(
     body("phone").optional().isMobilePhone("any"),
     validateRequest,
   ],
-  authService.register,
+  (req: Request, res: Response, next: NextFunction) => authService.register(req, res, next),
 );
 
 router.post(
   "/login",
   [body("email").isEmail(), body("password").notEmpty(), validateRequest],
-  authService.login,
+  (req: Request, res: Response, next: NextFunction) => authService.login(req, res, next),
 );
 
+router.post("/logout", (req: Request, res: Response, next: NextFunction) => authService.logout(req, res, next));
 
-router.post("/logout", authService.logout);
-
-router.post("/refresh", authService.refresh);
+router.post("/refresh", (req: Request, res: Response, next: NextFunction) => authService.refresh(req, res, next));
 
 router.get("/check", authMiddleware, async (req: any, res: any) => {
   if (req.user) {
