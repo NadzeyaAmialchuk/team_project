@@ -1,7 +1,8 @@
 const { Router } = require("express");
 const { body } = require("express-validator");
 const authService = require("../services/auth.service");
-const validateRequest = require("../middlewares/error.middleware").validateRequest;
+const validateRequest =
+  require("../middlewares/error.middleware").validateRequest;
 const authMiddleware = require("../middlewares/auth.middleware");
 
 const router = Router();
@@ -15,33 +16,24 @@ router.post(
     body("phone").optional().isMobilePhone("any"),
     validateRequest,
   ],
-  authService.register
+  authService.register,
 );
 
 router.post(
-    "/login",
-    [body("email").isEmail(), body("password").notEmpty(), validateRequest],
-    authService.login
-  );
+  "/login",
+  [body("email").isEmail(), body("password").notEmpty(), validateRequest],
+  authService.login,
+);
 
-  router.get("/userMe", authMiddleware, async (req: any, res: any) => {
-    try {
-      const user = await authService.getUserMe(req.user.id);
 
-      if (!user) {
-        return res.status(404).json({ error: "User not found" });
+router.post("/logout", authService.logout);
+
+router.post("/refresh", authService.refresh);
+
+router.get("/check", authMiddleware, async (req: any, res: any) => {
+  if (req.user) {
+          res.json(req.user)
       }
-
-      const { password, password_salt, ...userData } = user;
-      res.json(userData);
-    } catch (error) {
-      console.error("Profile error:", error);
-      res.status(500).json({ error: "Internal server error" });
-    }
-  });
-
-  router.post("/logout", authService.logout);
-
-  router.post("/refresh", authService.refresh);
+});
 
 module.exports = router;

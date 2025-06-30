@@ -1,14 +1,14 @@
 const jwt = require('jsonwebtoken');
 
-const generateAccessToken = (userId: string, email: string, phone?: string): string => {
-  return jwt.sign({ sub: userId, email, phone }, process.env.JWT_SECRET!, {
-    expiresIn: '15m'
+const generateAccessToken = (userId: string, email: string): string => {
+  return jwt.sign({ sub: userId, email }, process.env.JWT_SECRET!, {
+    expiresIn: process.env.ACCESS_EXPIRE
   });
 };
 
 const generateRefreshToken = (userId: string): string => {
   return jwt.sign({ sub: userId }, process.env.JWT_REFRESH_SECRET!, {
-    expiresIn: '7d'
+    expiresIn: process.env.REFRESH_EXPIRE
   });
 };
 
@@ -20,11 +20,11 @@ const verifyRefreshToken = (token: string): any => {
   return jwt.verify(token, process.env.JWT_REFRESH_SECRET!);
 };
 
-module.exports= { 
-  generateAccessToken, 
-  generateRefreshToken, 
-  verifyAccessToken, 
-  verifyRefreshToken 
+module.exports= {
+  generateAccessToken,
+  generateRefreshToken,
+  verifyAccessToken,
+  verifyRefreshToken
 };
 
 export {};

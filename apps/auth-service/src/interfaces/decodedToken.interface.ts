@@ -1,5 +1,4 @@
 export interface DecodedToken {
-    sub: string;
-    email: string;
-    phone?: string;
-  }
+  sub: string;
+  email: string;
+}

@@ -24,7 +24,7 @@ const register = async (req: any, res: any) => {
       },
     });
 
-    const accessToken = generateAccessToken(user.id, user.email, user.phone);
+    const accessToken = generateAccessToken(user.id, user.email);
     const refreshToken = generateRefreshToken(user.id);
 
     await redisClient.set(`refreshToken:${user.id}`, refreshToken, {
@@ -55,7 +55,7 @@ const login = async (req: any, res: any) => {
     );
     if (!isValid) return res.status(401).json({ error: "Invalid credentials" });
 
-    const accessToken = generateAccessToken(user.id, user.email, user.phone);
+    const accessToken = generateAccessToken(user.id, user.email);
     const refreshToken = generateRefreshToken(user.id);
 
     await redisClient.set(`refreshToken:${user.id}`, refreshToken, {
@@ -67,10 +67,6 @@ const login = async (req: any, res: any) => {
 
     res.send("login successfully");
 
-    // res.json({
-    //   access_token: accessToken,
-    //   refresh_token: refreshToken
-    // });
   } catch (error) {
     console.error("Login error:", error);
     res.status(500).json({ error: "Login failed" });
@@ -96,14 +92,14 @@ const refresh = async (req: any, res: any) => {
 
     const user = await prisma.user.findUnique({
       where: { id: userId },
-      select: { id: true, email: true, phone: true },
+      select: { id: true, email: true },
     });
 
     if (!user) {
       return res.status(404).json({ error: "User not found" });
     }
 
-    const newAccessToken = generateAccessToken(user.id, user.email, user.phone);
+    const newAccessToken = generateAccessToken(user.id, user.email);
     const newRefreshToken = generateRefreshToken(user.id);
 
     await redisClient.set(`refreshToken:${user.id}`, newRefreshToken, {
@@ -112,6 +108,7 @@ const refresh = async (req: any, res: any) => {
 
     res.cookie("access_token", newAccessToken);
     res.cookie("refresh_token", newRefreshToken);
+    res.json('new tokens are generated')
 
   } catch (error) {
     console.error("Refresh token error:", error);
@@ -121,7 +118,7 @@ const refresh = async (req: any, res: any) => {
 
 const logout = async (req: any, res: any) => {
   try {
-    const userId = req.body;
+    const userId = req.body.id;
     res.clearCookie("access_token");
     res.clearCookie("refresh_token");
     await redisClient.del(`refreshToken:${userId}`);
@@ -131,6 +128,7 @@ const logout = async (req: any, res: any) => {
     res.status(500).json({ error: "Logout failed" });
   }
 };
+
 
 module.exports = {
   register,
