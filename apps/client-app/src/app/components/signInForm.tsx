@@ -4,7 +4,7 @@ import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 
 const formSchema = z.object({
-  login: z.string()
+  email: z.string()
     .min(1, "Required")
     .refine(value =>
       /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value) ||
@@ -24,24 +24,29 @@ export default function SignInForm() {
   });
 
   const onSubmit = async (data: FormData) => {
-    const response = await fetch('https://api/signin', {
+    console.log(JSON.stringify(data))
+    const response = await fetch('http://localhost:3001/auth/login', {
       method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
       body: JSON.stringify(data)
     });
-    console.log(await response.json());
+    console.log(response);
+    //TODO redirect
   };
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-3">
       <input
-        {...register("login")}
-        placeholder="Phone number, username, or email"
+        {...register("email")}
+        placeholder="email"
         className="px-2 py-1.5 text-xs bg-gray-50 border border-gray-200 rounded-sm focus:outline-none focus:border-gray-400"
       />
       <input
         type="password"
         {...register("password")}
-        placeholder="Password"
+        placeholder="password"
         className="px-2 py-1.5 text-xs bg-gray-50 border border-gray-200 rounded-sm focus:outline-none focus:border-gray-400"
       />
       <button

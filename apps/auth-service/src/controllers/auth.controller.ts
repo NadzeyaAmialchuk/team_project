@@ -17,23 +17,26 @@ router.post(
     body("phone").optional().isMobilePhone("any"),
     validateRequest,
   ],
-  (req: Request, res: Response, next: NextFunction) => authService.register(req, res, next),
+  (req: Request, res: Response, next: NextFunction) =>
+    authService.register(req, res, next),
 );
 
-router.post(
-  "/login",
-  [body("email").isEmail(), body("password").notEmpty(), validateRequest],
-  (req: Request, res: Response, next: NextFunction) => authService.login(req, res, next),
+router.post("/login", (req: Request, res: Response, next: NextFunction) =>
+  authService.login(req, res, next),
 );
 
-router.post("/logout", (req: Request, res: Response, next: NextFunction) => authService.logout(req, res, next));
+router.post("/logout", (req: Request, res: Response, next: NextFunction) =>
+  authService.logout(req, res, next),
+);
 
-router.post("/refresh", (req: Request, res: Response, next: NextFunction) => authService.refresh(req, res, next));
+router.post("/refresh", (req: Request, res: Response, next: NextFunction) =>
+  authService.refresh(req, res, next),
+);
 
 router.post("/check", authMiddleware, async (req: any, res: any) => {
   if (req.user) {
-          res.json(req.user)
-      }
+    res.json(req.user);
+  }
 });
 
 module.exports = router;

@@ -45,11 +45,9 @@ export default function SignupForm() {
 
   const onSubmit = async (data: SignupFormData) => {
     setIsLoading(true);
+    console.log(data)
     try {
-      await new Promise((resolve) => setTimeout(resolve, 1000));
-      console.log("Form data:", data);
-      // TODO
-      // await fetch('/api/signup', { method: 'POST', body: JSON.stringify(data) });
+      await fetch('http://localhost:3001/auth/register', { method: 'POST', body: JSON.stringify(data) });
     } catch (error) {
       console.error("Error:", error);
     } finally {
