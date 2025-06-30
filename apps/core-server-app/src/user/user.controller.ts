@@ -3,28 +3,27 @@ import {
   Get,
   Body,
   Param,
-  UnauthorizedException,
   Headers,
+  UseGuards,
+  Req,
 } from '@nestjs/common';
 import { UserService } from './user.service';
+import { AuthGuard } from 'src/guards/auth.guard';
+import { IAuthRequest } from 'interfaces/IAuthRequest.interface';
 
 @Controller('user')
 export class UserController {
   constructor(private readonly userService: UserService) {}
 
+  @UseGuards(AuthGuard)
   @Get('me')
-  async findMe(@Headers() headers: Record<string, string>) {
-    const authHeader = headers['authorization'];
-    if (!authHeader) {
-      throw new UnauthorizedException('Authorization header is missing');
+  async findMe(@Req() request: IAuthRequest) {
+    if (request.user) {
+      return {
+        userId: request.user.id,
+        email: request.user.email,
+      };
     }
-    const [bearer, token] = authHeader.split(' ');
-    if (bearer !== 'Bearer' || !token) {
-      throw new UnauthorizedException('Invalid authorization format');
-    }
-
-    console.log('token:', token);
-    return this.userService.findMe(token);
   }
 
   @Get()

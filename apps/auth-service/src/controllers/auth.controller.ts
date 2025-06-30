@@ -30,7 +30,7 @@ router.post("/logout", (req: Request, res: Response, next: NextFunction) => auth
 
 router.post("/refresh", (req: Request, res: Response, next: NextFunction) => authService.refresh(req, res, next));
 
-router.get("/check", authMiddleware, async (req: any, res: any) => {
+router.post("/check", authMiddleware, async (req: any, res: any) => {
   if (req.user) {
           res.json(req.user)
       }

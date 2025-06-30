@@ -1,9 +1,10 @@
 import { Module } from '@nestjs/common';
-import { UserService } from './user.service';
-import { UserController } from './user.controller';
 import { PrismaModule } from 'src/prisma/prisma.module';
 import { HttpModule } from '@nestjs/axios';
 import { ConfigModule, ConfigService } from '@nestjs/config';
+import { UserController } from './user.controller';
+import { UserService } from './user.service';
+import { AuthGuard } from 'src/guards/auth.guard';
 
 @Module({
   imports: [
@@ -20,6 +21,6 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
     ConfigModule.forRoot(),
   ],
   controllers: [UserController],
-  providers: [UserService],
+  providers: [UserService, AuthGuard],
 })
 export class UserModule {}
