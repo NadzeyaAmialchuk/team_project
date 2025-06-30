@@ -1,4 +1,4 @@
-export interface User {
+export interface IUser {
     id: string;
     username: string;
     email: string;
@@ -8,4 +8,3 @@ export interface User {
     is_verified: boolean;
     created_at: Date;
   }
-  

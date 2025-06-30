@@ -1,4 +1,4 @@
-export interface CustomError extends Error {
+export interface ICustomError extends Error {
     statusCode?: number;
     errors?: any[];
   }

@@ -1,10 +1,10 @@
 import { NextFunction, Response } from "express";
-import { AuthRequest } from "../interfaces/authRequest.interface";
+import { IAuthRequest } from "../interfaces/authRequest.interface";
 
 const { verifyAccessToken } = require("../utils/jwt");
 
 const authMiddleware = (
-  req: AuthRequest,
+  req: IAuthRequest,
   res: Response,
   next: NextFunction,
 ) => {
