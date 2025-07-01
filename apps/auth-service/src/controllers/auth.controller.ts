@@ -10,13 +10,13 @@ const router = Router();
 
 router.post(
   "/register",
-  [
-    body("username").notEmpty(),
-    body("email").isEmail(),
-    body("password").isLength({ min: 8 }),
-    body("phone").optional().isMobilePhone("any"),
-    validateRequest,
-  ],
+  // [
+  //   body("username").notEmpty(),
+  //   body("email").isEmail(),
+  //   body("password").isLength({ min: 8 }),
+  //   body("phone").optional().isMobilePhone("any"),
+  //   validateRequest,
+  // ],
   (req: Request, res: Response, next: NextFunction) =>
     authService.register(req, res, next),
 );

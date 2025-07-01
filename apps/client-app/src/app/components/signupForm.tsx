@@ -1,32 +1,29 @@
-'use client';
+"use client";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { useState } from "react";
 
 const signupSchema = z.object({
-  emailOrPhone: z
-    .string()
-    .min(1, "Email or phone number is required")
-    .refine(
-      (value) =>
-        /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value) ||
-        /^[0-9]{10,15}$/.test(value),
-      "Invalid email or phone number"
-    ),
-  password: z
-    .string()
-    .min(6, "Password must be at least 6 characters"),
-  fullName: z
-    .string()
-    .min(1, "Full name is required"),
   username: z
     .string()
     .min(3, "Username must be at least 3 characters")
     .regex(
       /^[a-zA-Z0-9._]+$/,
-      "Username can only contain letters, numbers, periods, and underscores"
+      "Username can only contain letters, numbers, periods, and underscores",
     ),
+  email: z
+    .string()
+    .min(1, "Email is required")
+    .refine(
+      (value) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value),
+      "Invalid email",
+    ),
+  password: z.string().min(6, "Password must be at least 6 characters"),
+  phone: z
+    .string()
+    .min(1, "phone number is required")
+    .refine((value) => /^\+?[0-9]{10,15}$/.test(value), "Invalid phone")
 });
 
 type SignupFormData = z.infer<typeof signupSchema>;
@@ -45,9 +42,16 @@ export default function SignupForm() {
 
   const onSubmit = async (data: SignupFormData) => {
     setIsLoading(true);
-    console.log(data)
+    console.log(data);
     try {
-      await fetch('http://localhost:3001/auth/register', { method: 'POST', body: JSON.stringify(data) });
+      console.log(JSON.stringify(data))
+      await fetch("http://localhost:3001/auth/register", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(data),
+      });
     } catch (error) {
       console.error("Error:", error);
     } finally {
@@ -60,20 +64,33 @@ export default function SignupForm() {
       <div>
         <input
           type="text"
-          placeholder="Mobile Number or Email"
+          placeholder="username"
           className={`w-full px-4 py-2 border ${
-            errors.emailOrPhone ? "border-red-500" : "border-gray-300"
+            errors.username ? "border-red-500" : "border-gray-300"
           } rounded-sm text-xs focus:outline-none focus:ring-1 focus:ring-blue-500`}
-          {...register("emailOrPhone")}
+          {...register("username")}
         />
-        {errors.emailOrPhone && (
-          <p className="text-red-500 text-xs mt-1">{errors.emailOrPhone.message}</p>
+        {errors.username && (
+          <p className="text-red-500 text-xs mt-1">{errors.username.message}</p>
+        )}
+      </div>
+      <div>
+        <input
+          type="text"
+          placeholder="email"
+          className={`w-full px-4 py-2 border ${
+            errors.email ? "border-red-500" : "border-gray-300"
+          } rounded-sm text-xs focus:outline-none focus:ring-1 focus:ring-blue-500`}
+          {...register("email")}
+        />
+        {errors.email && (
+          <p className="text-red-500 text-xs mt-1">{errors.email.message}</p>
         )}
       </div>
       <div>
         <input
           type="password"
-          placeholder="Password"
+          placeholder="password"
           className={`w-full px-4 py-2 border ${
             errors.password ? "border-red-500" : "border-gray-300"
           } rounded-sm text-xs focus:outline-none focus:ring-1 focus:ring-blue-500`}
@@ -86,31 +103,19 @@ export default function SignupForm() {
       <div>
         <input
           type="text"
-          placeholder="Full Name"
+          placeholder="Phone"
           className={`w-full px-4 py-2 border ${
-            errors.fullName ? "border-red-500" : "border-gray-300"
+            errors.phone ? "border-red-500" : "border-gray-300"
           } rounded-sm text-xs focus:outline-none focus:ring-1 focus:ring-blue-500`}
-          {...register("fullName")}
+          {...register("phone")}
         />
-        {errors.fullName && (
-          <p className="text-red-500 text-xs mt-1">{errors.fullName.message}</p>
-        )}
-      </div>
-      <div>
-        <input
-          type="text"
-          placeholder="Username"
-          className={`w-full px-4 py-2 border ${
-            errors.username ? "border-red-500" : "border-gray-300"
-          } rounded-sm text-xs focus:outline-none focus:ring-1 focus:ring-blue-500`}
-          {...register("username")}
-        />
-        {errors.username && (
-          <p className="text-red-500 text-xs mt-1">{errors.username.message}</p>
+        {errors.phone && (
+          <p className="text-red-500 text-xs mt-1">{errors.phone.message}</p>
         )}
       </div>
       <div className="text-xs text-gray-500 text-center px-2">
-        People who use our service may have uploaded your contact information to Instagram.{" "}
+        People who use our service may have uploaded your contact information to
+        Instagram.{" "}
         <a href="#" className="text-blue-500">
           Learn More
         </a>
@@ -131,11 +136,13 @@ export default function SignupForm() {
         .
       </div>
 
-       <button
+      <button
         type="submit"
         disabled={!isValid || isLoading}
         className={`w-full bg-blue-500 text-white py-1.5 rounded-md text-sm font-medium ${
-          !isValid || isLoading ? "opacity-70 cursor-not-allowed" : "hover:bg-blue-600"
+          !isValid || isLoading
+            ? "opacity-70 cursor-not-allowed"
+            : "hover:bg-blue-600"
         }`}
       >
         {isLoading ? "Signing up..." : "Sign up"}
