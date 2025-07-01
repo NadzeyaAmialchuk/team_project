@@ -1,18 +1,22 @@
-'use client';
-import { useForm } from 'react-hook-form';
-import { z } from 'zod';
-import { zodResolver } from '@hookform/resolvers/zod';
+"use client";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
+
+import { useRouter } from "next/navigation";
 
 const formSchema = z.object({
-  email: z.string()
+  email: z
+    .string()
     .min(1, "Required")
-    .refine(value =>
-      /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value) ||
-      /^\+?[0-9]{10,15}$/.test(value) ||
-      /^[a-zA-Z0-9._]{3,}$/.test(value),
-      "Invalid input"
+    .refine(
+      (value) =>
+        /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value) ||
+        /^\+?[0-9]{10,15}$/.test(value) ||
+        /^[a-zA-Z0-9._]{3,}$/.test(value),
+      "Invalid input",
     ),
-  password: z.string().min(6, "Minimum 6 characters")
+  password: z.string().min(6, "Minimum 6 characters"),
 });
 
 type FormData = z.infer<typeof formSchema>;
@@ -20,20 +24,40 @@ type FormData = z.infer<typeof formSchema>;
 export default function SignInForm() {
   const { register, handleSubmit, formState } = useForm<FormData>({
     resolver: zodResolver(formSchema),
-    mode: 'onChange'
+    mode: "onChange",
   });
 
+  const router = useRouter();
+
+  // const onSubmit = async (data: FormData) => {
+  //   console.log(JSON.stringify(data))
+  //   const response = await fetch('http://localhost:3001/auth/login', {
+  //     method: 'POST',
+  //     headers: {
+  //       'Content-Type': 'application/json',
+  //     },
+  //     body: JSON.stringify(data)
+  //   });
+  //   console.log(response);
+  //   //TODO redirect
+  // };
+
   const onSubmit = async (data: FormData) => {
-    console.log(JSON.stringify(data))
-    const response = await fetch('http://localhost:3001/auth/login', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(data)
-    });
-    console.log(response);
-    //TODO redirect
+    try {
+      const response = await fetch("http://localhost:3001/auth/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(data),
+      });
+
+      if (!response.ok) {
+        throw new Error("login error");
+      }
+
+      router.push("/userprofile");
+    } catch (error) {
+      console.error("Error:", error);
+    }
   };
 
   return (
@@ -53,7 +77,7 @@ export default function SignInForm() {
         type="submit"
         disabled={!formState.isValid}
         className={`py-1 text-sm font-medium text-white rounded ${
-          formState.isValid ? 'bg-blue-500 hover:bg-blue-600' : 'bg-blue-300'
+          formState.isValid ? "bg-blue-500 hover:bg-blue-600" : "bg-blue-300"
         }`}
       >
         Log In

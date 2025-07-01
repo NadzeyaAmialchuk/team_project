@@ -15,14 +15,13 @@ const authMiddleware = (
 
   try {
     const decoded = verifyAccessToken(authCookie);
-
     req.user = {
       id: decoded.sub,
       email: decoded.email,
     };
-
     next();
   } catch (err) {
+    console.log(err)
     res.status(401).json({ error: "Invalid or expired token" });
   }
 };

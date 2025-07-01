@@ -26,6 +26,22 @@ export class UserService {
     }
   }
 
+  async findFullMe(token: string) {
+    if (token) {
+      const secret = this.configService.get<string>('JWT_SECRET');
+      if (!secret) {
+        throw new InternalServerErrorException('JWT secret not configured');
+      }
+      const isUser = jwt.verify(token, secret) as {
+        sub: string;
+      };
+      const id = isUser.sub;
+      return await this.prisma.user.findUnique({
+        where: { id },
+      });
+    }
+  }
+
   async findOne(username: string): Promise<User | null> {
     return await this.prisma.user.findUnique({
       where: { username },

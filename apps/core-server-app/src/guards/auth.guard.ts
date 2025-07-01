@@ -31,8 +31,6 @@ export class AuthGuard implements CanActivate {
           },
         ),
       );
-      console.log(response);
-
       request.user = { id: response.data.id, email: response.data.email };
       return true;
     } catch (error) {
