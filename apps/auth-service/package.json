@@ -1,4 +1,5 @@
 {
+  "name": "auth",
   "scripts": {
     "start:dev": "nodemon src/index.ts",
     "start": "ts-node src/index.ts",

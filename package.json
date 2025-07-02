@@ -3,26 +3,26 @@
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "commit": "cz",
-    "prepare": "husky"
-  },
+ "scripts": {
+  "start:all": "concurrently \"npm run start:front\" \"npm run start:core\" \"npm run start:auth\"",
+  "start:front": "cd apps/client-app && npm run dev",
+  "start:core": "cd apps/core-server-app && npm run start:dev",
+  "start:auth": "cd apps/auth-service && npm run start:dev"
+},
   "author": "",
   "license": "ISC",
   "private": true,
+  "packageManager": "npm@10.1.0",
   "workspaces": [
     "apps/*"
   ],
-  "dependencies": {
-    "turbo": "^2.5.3"
-  },
   "config": {
     "commitizen": {
       "path": "cz-conventional-changelog"
     }
   },
   "devDependencies": {
-    "husky": "^9.1.7"
+    "husky": "^9.1.7",
+    "turbo": "^2.5.4"
   }
 }
