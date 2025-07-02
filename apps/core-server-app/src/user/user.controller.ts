@@ -13,7 +13,9 @@ import { UserService } from './user.service';
 import { AuthGuard } from 'src/guards/auth.guard';
 import { IAuthRequest } from 'src/interfaces/IAuthRequest.interface';
 import { PrismaService } from 'src/prisma/prisma.service';
+import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 
+@ApiTags('user')
 @Controller('user')
 export class UserController {
   constructor(
@@ -22,6 +24,8 @@ export class UserController {
   ) {}
 
   @UseGuards(AuthGuard)
+  @ApiOperation({ summary: 'Get user self data' })
+  @ApiResponse({ status: 200, description: 'Success' })
   @Get('me')
   async findMe(@Req() request: IAuthRequest) {
     if (!request.user) {
@@ -49,11 +53,15 @@ export class UserController {
   }
 
   @Get()
+  @ApiOperation({ summary: 'Get info about all users' })
+  @ApiResponse({ status: 200, description: 'Success' })
   findAll() {
     return this.userService.findAll();
   }
 
   @Get(':username')
+  @ApiOperation({ summary: 'Get info about one user' })
+  @ApiResponse({ status: 200, description: 'Success' })
   findOne(@Param('username') username: string) {
     return this.userService.findOne(username);
   }
