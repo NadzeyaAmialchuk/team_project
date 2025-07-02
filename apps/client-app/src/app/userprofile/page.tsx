@@ -10,7 +10,7 @@ export default function Userprofile() {
 
   const getUserData = async () => {
     try {
-      const response = await fetch("http://localhost:3003/user/me", {
+      const response = await fetch("http://localhost:3003/users/me", {
         credentials: "include",
       });
       if (!response.ok) {

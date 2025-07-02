@@ -15,8 +15,8 @@ import { IAuthRequest } from 'src/interfaces/IAuthRequest.interface';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 
-@ApiTags('user')
-@Controller('user')
+@ApiTags('users')
+@Controller('users')
 export class UserController {
   constructor(
     private readonly userService: UserService,
