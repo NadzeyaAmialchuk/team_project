@@ -10,7 +10,9 @@ export default function Userprofile() {
 
   const getUserData = async () => {
     try {
-      const response = await fetch("http://localhost:3003/user/me");
+      const response = await fetch("http://localhost:3003/user/me", {
+        credentials: "include",
+      });
       if (!response.ok) {
         throw new Error("User data fetching error");
       }

@@ -29,22 +29,10 @@ export default function SignInForm() {
 
   const router = useRouter();
 
-  // const onSubmit = async (data: FormData) => {
-  //   console.log(JSON.stringify(data))
-  //   const response = await fetch('http://localhost:3001/auth/login', {
-  //     method: 'POST',
-  //     headers: {
-  //       'Content-Type': 'application/json',
-  //     },
-  //     body: JSON.stringify(data)
-  //   });
-  //   console.log(response);
-  //   //TODO redirect
-  // };
-
   const onSubmit = async (data: FormData) => {
     try {
       const response = await fetch("http://localhost:3001/auth/login", {
+        credentials: "include",
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(data),
